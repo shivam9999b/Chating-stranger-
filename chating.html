@@ -1,233 +1,213 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
-  <meta charset="UTF-8" />
-  <title>chat</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <title>Online Chating – Login</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
   <style>
-    body {
-      background: #e9f2fb;
-      font-family: 'Segoe UI', sans-serif;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
+    /* ==== RESET & BASICS ==== */
+    *{box-sizing:border-box;margin:0;padding:0}
+    body,html{height:100%}
+    body{
+      font-family:'Poppins',sans-serif;
+      color:#fff;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      overflow:hidden;      /* वीडियो स्क्रॉल न हो */
     }
 
-    .chat-container {
-      width: 500px;
-      height: 90vh;
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.1);
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
+    /* ==== FULL-SCREEN BACKGROUND VIDEO ==== */
+    video.bg-video{
+      position:fixed;
+      top:0;left:0;
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      z-index:-2;           /* सबसे पीछे */
+    }
+    /* हल्का डार्क ओवरले ताकि कंटेंट पढ़ा जा सके */
+    .overlay{
+      position:fixed;
+      top:0;left:0;
+      width:100%;
+      height:100%;
+      background:rgba(0,0,0,.45);
+      z-index:-1;
     }
 
-    .chat-header {
-      padding: 20px;
-      background: #007bff;
-      color: white;
-      font-weight: bold;
-      text-align: center;
+    /* ==== LOGIN CARD ==== */
+    .card{
+      width:90%;
+      max-width:380px;
+      padding:32px 28px 40px;
+      background:rgba(255,255,255,.12);
+      backdrop-filter:blur(14px);
+      border-radius:18px;
+      text-align:center;
+      box-shadow:0 8px 24px rgba(0,0,0,.3);
+    }
+    header{
+      font-size:30px;
+      font-weight:600;
+      margin-bottom:26px;
+      text-transform:capitalize;
     }
 
-    #messages {
-      flex: 1;
-      padding: 20px;
-      overflow-y: auto;
-      background: #f9fbfc;
+    select,button{
+      width:100%;
+      padding:13px 14px;
+      font-size:15px;
+      border:none;
+      border-radius:10px;
+      margin-bottom:14px;
+      outline:none;
+    }
+    select{
+      background:rgba(255,255,255,.85);
+      color:#333;
     }
 
-    #messages div {
-      margin-bottom: 12px;
-      padding: 10px 14px;
-      border-radius: 18px;
-      max-width: 75%;
-      clear: both;
+    .google-btn{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      background:#fff;
+      color:#4285F4;
+      font-weight:600;
+      transition:.25s;
+      cursor:pointer;
     }
+    .google-btn:hover{background:#f0f0f0}
 
-    .self {
-      background: #d1ecf1;
-      align-self: flex-end;
-      margin-left: auto;
-      text-align: right;
-    }
+    #error-message{color:#ffbebc;font-size:14px;margin-top:4px;min-height:18px}
 
-    .other {
-      background: #f1f1f1;
-      align-self: flex-start;
-      margin-right: auto;
-      text-align: left;
+    /* ==== FOOTER (AGE & TERMS) ==== */
+    footer{
+      margin-top:20px;
+      font-size:13px;
+      color:#eee;
     }
+    footer label{
+      display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:6px
+    }
+    footer a{color:#a6ffd1;text-decoration:underline}
 
-    .chat-input {
-      display: flex;
-      padding: 15px;
-      border-top: 1px solid #ddd;
-      background: #fff;
+    /* Custom switch */
+    input[type="checkbox"]{
+      appearance:none;width:40px;height:22px;background:#ccc;border-radius:15px;position:relative;cursor:pointer
     }
-
-    .chat-input input {
-      flex: 1;
-      padding: 10px 15px;
-      font-size: 16px;
-      border-radius: 25px;
-      border: 1px solid #ccc;
-      outline: none;
+    input[type="checkbox"]::before{
+      content:"";position:absolute;width:18px;height:18px;border-radius:50%;background:#fff;top:2px;left:2px;transition:.3s
     }
-
-    .chat-input button {
-      margin-left: 10px;
-      padding: 10px 16px;
-      font-size: 16px;
-      border: none;
-      border-radius: 25px;
-      background: #007bff;
-      color: white;
-      cursor: pointer;
-    }
-
-    .chat-footer {
-      display: flex;
-      justify-content: center;
-      padding: 10px;
-      border-top: 1px solid #ddd;
-      background: #f8f9fa;
-    }
-
-    .chat-footer button {
-      padding: 8px 16px;
-      border-radius: 20px;
-      border: none;
-      background-color: #dc3545;
-      color: white;
-      font-weight: bold;
-      cursor: pointer;
-    }
+    input[type="checkbox"]:checked{background:#4caf50}
+    input[type="checkbox"]:checked::before{transform:translateX(18px)}
   </style>
 </head>
 <body>
 
-<div class="chat-container">
-  <div class="chat-header">Stranger Chat</div>
+  <!-- Background video (🔁, 🔇, 📱hide on small data if needed) -->
+  <video class="bg-video" src="https://cdn.pixabay.com/video/2019/10/02/28086-363297143_large.mp4"
+         autoplay muted loop playsinline></video>
+  <div class="overlay"></div>
 
-  <div id="messages"></div>
+  <!-- === LOGIN CARD ==== -->
+  <div class="card">
+    <header>Welcome</header>
 
-  <div class="chat-input">
-    <input type="text" id="messageInput" placeholder="Type a message..." />
-    <button id="sendBtn">Send</button>
+    <!-- Country -->
+    <select id="countrySelect">
+      <option value="" disabled selected>Select Country</option>
+    </select>
+
+    <!-- Gender -->
+    <select id="genderSelect">
+      <option value="" disabled selected>Select Gender</option>
+      <option value="male">♂️ Male</option>
+      <option value="female">♀️ Female</option>
+    </select>
+
+    <!-- Google Login -->
+    <button class="google-btn" onclick="loginWithGoogle()">
+      <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="" width="18">
+      Login with Google
+    </button>
+
+    <div id="error-message"></div>
+
+    <!-- Footer -->
+    <footer>
+      <label>
+        <input type="checkbox" id="ageCheck">
+        I confirm that I am at least 18 years old.
+      </label>
+      I accept <a href="/online chating /parivcy.html" target="_blank">User Agreement</a>.
+    </footer>
   </div>
 
-  <div class="chat-footer">
-    <button id="nextBtn">Next Stranger</button>
-  </div>
-</div>
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
 
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
-  import {
-    getAuth,
-    signInAnonymously,
-    onAuthStateChanged,
-  } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js";
-  import {
-    getFirestore,
-    collection,
-    addDoc,
-    query,
-    orderBy,
-    onSnapshot,
-    serverTimestamp,
-    getDocs,
-    deleteDoc,
-    doc,
-  } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
+  <script>
+    /* ==== Firebase Config ==== */
+    const firebaseConfig = {
+      apiKey: "AIzaSyD9IUXYLnLJLpborYhtzj86EGoZgJ5JOwk",
+      authDomain: "country-login-73d8a.firebaseapp.com",
+      projectId: "country-login-73d8a",
+      storageBucket: "country-login-73d8a.appspot.com",
+      messagingSenderId: "199478752615",
+      appId: "1:199478752615:web:bbecfed8887a0493372bc2"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyCHq0bxvBR4cHF4ImhDunepHj9GHlaDA_E",
-    authDomain: "chating-e0e5a.firebaseapp.com",
-    projectId: "chating-e0e5a",
-    storageBucket: "chating-e0e5a.appspot.com",
-    messagingSenderId: "638067889380",
-    appId: "1:638067889380:web:97ac7ed4617e0f775208f1"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const db = getFirestore(app);
-
-  const messagesDiv = document.getElementById("messages");
-  const messageInput = document.getElementById("messageInput");
-  const sendBtn = document.getElementById("sendBtn");
-  const nextBtn = document.getElementById("nextBtn");
-
-  let currentUserUid = null;
-  let unsubscribe = null;
-
-  signInAnonymously(auth).catch(error => {
-    alert("Auth error: " + error.message);
-  });
-
-  onAuthStateChanged(auth, async (user) => {
-    if (user) {
-      currentUserUid = user.uid;
-      await clearOldMessages();
-      startListening();
-    }
-  });
-
-  sendBtn.addEventListener("click", sendMessage);
-  messageInput.addEventListener("keypress", (e) => {
-    if (e.key === "Enter") sendMessage();
-  });
-
-  nextBtn.addEventListener("click", async () => {
-    if (unsubscribe) unsubscribe();
-    await clearOldMessages();
-    startListening();
-  });
-
-  async function clearOldMessages() {
-    const snapshot = await getDocs(collection(db, "messages"));
-    const deletePromises = [];
-    snapshot.forEach(docSnap => {
-      deletePromises.push(deleteDoc(doc(db, "messages", docSnap.id)));
+    /* ==== Country List ==== */
+    const countries = [
+      "India","United States","United Kingdom","Australia","Canada","Germany","France","Japan","China","Brazil","Mexico",
+      "South Africa","Russia","Italy","Spain","Indonesia","Netherlands","Sweden","Switzerland","Turkey","Nepal","Bangladesh",
+      "Pakistan","Sri Lanka","New Zealand","UAE","Saudi Arabia"
+    ];
+    const countrySelect = document.getElementById('countrySelect');
+    countries.forEach(c=>{
+      const o=document.createElement('option');o.value=o.textContent=c;countrySelect.appendChild(o);
     });
-    await Promise.all(deletePromises);
-    messagesDiv.innerHTML = "";
-  }
 
-  async function sendMessage() {
-    const text = messageInput.value.trim();
-    if (!text || !currentUserUid) return;
+    const errorMsg = document.getElementById('error-message');
 
-    await addDoc(collection(db, "messages"), {
-      uid: currentUserUid,
-      text: text,
-      timestamp: serverTimestamp()
-    });
-    messageInput.value = "";
-  }
+    /* ==== Google Auth ==== */
+    function loginWithGoogle(){
+      const country = countrySelect.value;
+      const gender  = document.getElementById('genderSelect').value;
+      const is18    = document.getElementById('ageCheck').checked;
 
-  function startListening() {
-    const q = query(collection(db, "messages"), orderBy("timestamp"));
-    unsubscribe = onSnapshot(q, (snapshot) => {
-      messagesDiv.innerHTML = "";
-      snapshot.forEach(doc => {
-        const msg = doc.data();
-        const msgDiv = document.createElement("div");
-        msgDiv.textContent = msg.text;
-        msgDiv.className = msg.uid === currentUserUid ? "self" : "other";
-        messagesDiv.appendChild(msgDiv);
+      if(!country){errorMsg.textContent="Please select your country!";return}
+      if(!gender){errorMsg.textContent="Please select your gender!";return}
+      if(!is18){errorMsg.textContent="You must confirm you are 18+.";return}
+      errorMsg.textContent="";
+
+      const provider = new firebase.auth.GoogleAuthProvider();
+      auth.signInWithPopup(provider).then(res=>{
+        const user=res.user;
+        // Save to sessionStorage
+        sessionStorage.setItem('userName',user.displayName);
+        sessionStorage.setItem('userEmail',user.email);
+        sessionStorage.setItem('userUID',user.uid);
+        sessionStorage.setItem('userCountry',country);
+        sessionStorage.setItem('userGender',gender);
+
+        alert("Login Successful! Welcome "+user.displayName);
+        window.location.href="/online chating /chating.html";
+      }).catch(err=>{
+        console.error(err);
+        errorMsg.textContent="Google Login failed. Try again.";
       });
-      messagesDiv.scrollTop = messagesDiv.scrollHeight;
-    });
-  }
-</script>
-
+    }
+  </script>
 </body>
 </html>
