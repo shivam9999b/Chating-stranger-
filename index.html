@@ -1,165 +1,161 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
   <meta charset="UTF-8">
-  <title>online chating</title>
+  <title>Online Chating – Login</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <!-- Google Font -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 
   <style>
-    body {
-      margin: 0;
-      padding: 0;
-      background: linear-gradient(135deg, #667eea, #764ba2);
-      font-family: 'Poppins', sans-serif;
-      color: white;
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
+    /* ==== RESET & BASICS ==== */
+    *{box-sizing:border-box;margin:0;padding:0}
+    body,html{height:100%}
+    body{
+      font-family:'Poppins',sans-serif;
+      color:#fff;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      overflow:hidden;      /* वीडियो स्क्रॉल न हो */
     }
 
-    header {
-      font-size: 32px;
-      font-weight: 600;
-      margin-bottom: 20px;
+    /* ==== FULL-SCREEN BACKGROUND VIDEO ==== */
+    video.bg-video{
+      position:fixed;
+      top:0;left:0;
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      z-index:-2;           /* सबसे पीछे */
+    }
+    /* हल्का डार्क ओवरले ताकि कंटेंट पढ़ा जा सके */
+    .overlay{
+      position:fixed;
+      top:0;left:0;
+      width:100%;
+      height:100%;
+      background:rgba(0,0,0,.45);
+      z-index:-1;
     }
 
-    select {
-      width: 250px;
-      padding: 12px;
-      border-radius: 8px;
-      border: none;
-      margin-bottom: 15px;
-      font-size: 16px;
+    /* ==== LOGIN CARD ==== */
+    .card{
+      width:90%;
+      max-width:380px;
+      padding:32px 28px 40px;
+      background:rgba(255,255,255,.12);
+      backdrop-filter:blur(14px);
+      border-radius:18px;
+      text-align:center;
+      box-shadow:0 8px 24px rgba(0,0,0,.3);
+    }
+    header{
+      font-size:30px;
+      font-weight:600;
+      margin-bottom:26px;
+      text-transform:capitalize;
     }
 
-    .login-buttons button {
-      width: 250px;
-      padding: 12px;
-      margin: 10px 0;
-      border: none;
-      border-radius: 8px;
-      font-size: 16px;
-      cursor: pointer;
-      transition: 0.3s;
-      font-weight: 600;
+    select,button{
+      width:100%;
+      padding:13px 14px;
+      font-size:15px;
+      border:none;
+      border-radius:10px;
+      margin-bottom:14px;
+      outline:none;
+    }
+    select{
+      background:rgba(255,255,255,.85);
+      color:#333;
     }
 
-    .google-btn {
-      background: #fff;
-      color: #4285F4;
+    .google-btn{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      background:#fff;
+      color:#4285F4;
+      font-weight:600;
+      transition:.25s;
+      cursor:pointer;
     }
+    .google-btn:hover{background:#f0f0f0}
 
-    .google-btn:hover {
-      background: #f0f0f0;
-    }
+    #error-message{color:#ffbebc;font-size:14px;margin-top:4px;min-height:18px}
 
-    #error-message {
-      color: #ffcccb;
-      font-size: 14px;
-      margin-top: 10px;
+    /* ==== FOOTER (AGE & TERMS) ==== */
+    footer{
+      margin-top:20px;
+      font-size:13px;
+      color:#eee;
     }
+    footer label{
+      display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:6px
+    }
+    footer a{color:#a6ffd1;text-decoration:underline}
 
-    footer {
-      position: absolute;
-      bottom: 20px;
-      width: 100%;
-      text-align: center;
+    /* Custom switch */
+    input[type="checkbox"]{
+      appearance:none;width:40px;height:22px;background:#ccc;border-radius:15px;position:relative;cursor:pointer
     }
-
-    footer label {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      font-size: 14px;
-      color: #fff;
+    input[type="checkbox"]::before{
+      content:"";position:absolute;width:18px;height:18px;border-radius:50%;background:#fff;top:2px;left:2px;transition:.3s
     }
-
-    footer input[type="checkbox"] {
-      appearance: none;
-      width: 40px;
-      height: 22px;
-      background: #ccc;
-      border-radius: 15px;
-      position: relative;
-      outline: none;
-      cursor: pointer;
-    }
-
-    footer input[type="checkbox"]::before {
-      content: "";
-      position: absolute;
-      width: 18px;
-      height: 18px;
-      background: #fff;
-      border-radius: 50%;
-      top: 2px;
-      left: 2px;
-      transition: 0.3s;
-    }
-
-    footer input[type="checkbox"]:checked {
-      background: #4CAF50;
-    }
-
-    footer input[type="checkbox"]:checked::before {
-      transform: translateX(18px);
-    }
-
-    footer p {
-      font-size: 13px;
-      margin-top: 8px;
-      color: #ddd;
-    }
-
-    footer a {
-      color: #a6ffd1;
-      text-decoration: underline;
-    }
+    input[type="checkbox"]:checked{background:#4caf50}
+    input[type="checkbox"]:checked::before{transform:translateX(18px)}
   </style>
 </head>
 <body>
 
-  <header>welcome</header>
+  <!-- Background video (🔁, 🔇, 📱hide on small data if needed) -->
+  <video class="bg-video" src="https://cdn.pixabay.com/video/2019/10/02/28086-363297143_large.mp4"
+         autoplay muted loop playsinline></video>
+  <div class="overlay"></div>
 
-  <!-- Country Dropdown -->
-  <select id="countrySelect">
-    <option value="" disabled selected>Select Country</option>
-  </select>
+  <!-- === LOGIN CARD ==== -->
+  <div class="card">
+    <header>Welcome</header>
 
-  <!-- Gender Dropdown -->
-  <select id="genderSelect">
-    <option value="" disabled selected>Select Gender</option>
-    <option value="male">♂️ Male</option>
-    <option value="female">♀️ Female</option>
-  </select>
+    <!-- Country -->
+    <select id="countrySelect">
+      <option value="" disabled selected>Select Country</option>
+    </select>
 
-  <!-- Google Login Button -->
-  <div class="login-buttons">
-    <button class="google-btn" onclick="loginWithGoogle()">Login with Google</button>
+    <!-- Gender -->
+    <select id="genderSelect">
+      <option value="" disabled selected>Select Gender</option>
+      <option value="male">♂️ Male</option>
+      <option value="female">♀️ Female</option>
+    </select>
+
+    <!-- Google Login -->
+    <button class="google-btn" onclick="loginWithGoogle()">
+      <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="" width="18">
+      Login with Google
+    </button>
+
+    <div id="error-message"></div>
+
+    <!-- Footer -->
+    <footer>
+      <label>
+        <input type="checkbox" id="ageCheck">
+        I confirm that I am at least 18 years old.
+      </label>
+      I accept <a href="/online chating /parivcy.html" target="_blank">User Agreement</a>.
+    </footer>
   </div>
 
-  <div id="error-message"></div>
-
-  <!-- Stylish Footer -->
-  <footer>
-    <label>
-      <input type="checkbox" id="ageCheck" />
-      I confirm that I am at least 18 years old.
-    </label>
-    <p>I accept <a href="parivcy.html" target="_blank">User Agreement</a>.</p>
-  </footer>
-
-  <!-- Firebase SDKs -->
+  <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
 
   <script>
+    /* ==== Firebase Config ==== */
     const firebaseConfig = {
       apiKey: "AIzaSyD9IUXYLnLJLpborYhtzj86EGoZgJ5JOwk",
       authDomain: "country-login-73d8a.firebaseapp.com",
@@ -168,69 +164,50 @@
       messagingSenderId: "199478752615",
       appId: "1:199478752615:web:bbecfed8887a0493372bc2"
     };
-
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
 
-    const countrySelect = document.getElementById('countrySelect');
-    const errorMessage = document.getElementById('error-message');
-
+    /* ==== Country List ==== */
     const countries = [
-      "India", "United States", "United Kingdom", "Australia", "Canada", "Germany",
-      "France", "Japan", "China", "Brazil", "Mexico", "South Africa", "Russia",
-      "Italy", "Spain", "Indonesia", "Netherlands", "Sweden", "Switzerland", "Turkey",
-      "Nepal", "Bangladesh", "Pakistan", "Sri Lanka", "New Zealand", "UAE", "Saudi Arabia"
+      "India","United States","United Kingdom","Australia","Canada","Germany","France","Japan","China","Brazil","Mexico",
+      "South Africa","Russia","Italy","Spain","Indonesia","Netherlands","Sweden","Switzerland","Turkey","Nepal","Bangladesh",
+      "Pakistan","Sri Lanka","New Zealand","UAE","Saudi Arabia"
     ];
-
-    countries.forEach(country => {
-      const option = document.createElement('option');
-      option.value = country;
-      option.textContent = country;
-      countrySelect.appendChild(option);
+    const countrySelect = document.getElementById('countrySelect');
+    countries.forEach(c=>{
+      const o=document.createElement('option');o.value=o.textContent=c;countrySelect.appendChild(o);
     });
 
-    function loginWithGoogle() {
-      const selectedCountry = document.getElementById('countrySelect').value;
-      const selectedGender = document.getElementById('genderSelect').value;
-      const ageConfirmed = document.getElementById('ageCheck').checked;
+    const errorMsg = document.getElementById('error-message');
 
-      if (!selectedCountry) {
-        errorMessage.textContent = "Please select your country first!";
-        return;
-      }
+    /* ==== Google Auth ==== */
+    function loginWithGoogle(){
+      const country = countrySelect.value;
+      const gender  = document.getElementById('genderSelect').value;
+      const is18    = document.getElementById('ageCheck').checked;
 
-      if (!selectedGender) {
-        errorMessage.textContent = "Please select your gender!";
-        return;
-      }
-
-      if (!ageConfirmed) {
-        errorMessage.textContent = "You must confirm that you're at least 18 years old.";
-        return;
-      }
-
-      errorMessage.textContent = "";
+      if(!country){errorMsg.textContent="Please select your country!";return}
+      if(!gender){errorMsg.textContent="Please select your gender!";return}
+      if(!is18){errorMsg.textContent="You must confirm you are 18+.";return}
+      errorMsg.textContent="";
 
       const provider = new firebase.auth.GoogleAuthProvider();
-      auth.signInWithPopup(provider)
-        .then((result) => {
-          const user = result.user;
-          alert("Login Successful! Welcome " + user.displayName);
+      auth.signInWithPopup(provider).then(res=>{
+        const user=res.user;
+        // Save to sessionStorage
+        sessionStorage.setItem('userName',user.displayName);
+        sessionStorage.setItem('userEmail',user.email);
+        sessionStorage.setItem('userUID',user.uid);
+        sessionStorage.setItem('userCountry',country);
+        sessionStorage.setItem('userGender',gender);
 
-          sessionStorage.setItem('userName', user.displayName);
-          sessionStorage.setItem('userEmail', user.email);
-          sessionStorage.setItem('userUID', user.uid);
-          sessionStorage.setItem('userCountry', selectedCountry);
-          sessionStorage.setItem('userGender', selectedGender);
-
-          window.location.href = "chating.html";
-        })
-        .catch((error) => {
-          console.error(error);
-          errorMessage.textContent = "Google Login Failed. Try again.";
-        });
+        alert("Login Successful! Welcome "+user.displayName);
+        window.location.href="/online chating /chating.html";
+      }).catch(err=>{
+        console.error(err);
+        errorMsg.textContent="Google Login failed. Try again.";
+      });
     }
   </script>
-
 </body>
 </html>
