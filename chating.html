@@ -6,15 +6,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       background: linear-gradient(to right, #eef2f3, #dbe9f4);
       font-family: 'Inter', sans-serif;
-      margin: 0;
-      padding: 0;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
+      padding: 10px;
+      transition: background 0.3s ease;
     }
 
     .chat-container {
@@ -42,11 +43,11 @@
     #toggleMode {
       position: absolute;
       right: 15px;
-      top: 12px;
+      top: 10px;
       background: none;
       border: none;
       color: white;
-      font-size: 20px;
+      font-size: 22px;
       cursor: pointer;
     }
 
@@ -69,17 +70,8 @@
       animation: fadeIn 0.3s ease-in-out;
     }
 
-    .self {
-      background: #d1ecf1;
-      align-self: flex-end;
-      text-align: right;
-    }
-
-    .other {
-      background: #e2e3e5;
-      align-self: flex-start;
-      text-align: left;
-    }
+    .self { background: #d1ecf1; align-self: flex-end; text-align: right; }
+    .other { background: #e2e3e5; align-self: flex-start; text-align: left; }
 
     .chat-input {
       display: flex;
@@ -115,9 +107,7 @@
       transition: background 0.2s;
     }
 
-    .chat-input button:hover {
-      background: #0056b3;
-    }
+    .chat-input button:hover { background: #0056b3; }
 
     .chat-footer {
       padding: 10px;
@@ -137,69 +127,24 @@
       transition: background 0.2s;
     }
 
-    .chat-footer button:hover {
-      background-color: #c82333;
-    }
+    .chat-footer button:hover { background-color: #c82333; }
 
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(10px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* DARK MODE CSS */
-    body.dark {
-      background: linear-gradient(to right, #1e1e2f, #2a2a3b);
-    }
-
-    .dark .chat-container {
-      background: #2e2e3e;
-      box-shadow: 0 8px 30px rgba(0,0,0,0.5);
-    }
-
-    .dark .chat-header {
-      background: linear-gradient(135deg, #343a40, #212529);
-    }
-
-    .dark #messages {
-      background: #3b3b4f;
-    }
-
-    .dark .self {
-      background: #495057;
-      color: white;
-    }
-
-    .dark .other {
-      background: #6c757d;
-      color: white;
-    }
-
-    .dark .chat-input {
-      background: #343a40;
-      border-top: 1px solid #495057;
-    }
-
-    .dark .chat-input input {
-      background: #495057;
-      color: white;
-      border: 1px solid #6c757d;
-    }
-
-    .dark .chat-input input::placeholder {
-      color: #ced4da;
-    }
-
-    .dark .chat-input button {
-      background: #17a2b8;
-    }
-
-    .dark .chat-footer {
-      background: #343a40;
-    }
-
-    .dark .chat-footer button {
-      background-color: #dc3545;
-    }
+    /* ==== DARK MODE ==== */
+    body.dark { background: linear-gradient(to right, #1e1e2f, #2a2a3b); }
+    .dark .chat-container { background: #2e2e3e; box-shadow: 0 8px 30px rgba(0,0,0,0.5); }
+    .dark .chat-header { background: linear-gradient(135deg, #343a40, #212529); }
+    .dark #messages { background: #3b3b4f; }
+    .dark .self { background: #495057; color: white; }
+    .dark .other { background: #6c757d; color: white; }
+    .dark .chat-input { background: #343a40; border-top: 1px solid #495057; }
+    .dark .chat-input input { background: #495057; color: white; border: 1px solid #6c757d; }
+    .dark .chat-input button { background: #17a2b8; }
+    .dark .chat-footer { background: #343a40; }
   </style>
 </head>
 <body>
@@ -222,13 +167,14 @@
   </div>
 </div>
 
+<!-- Firebase SDK -->
 <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
   import {
     getAuth,
     signInAnonymously,
-    onAuthStateChanged,
-  } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js";
+    onAuthStateChanged
+  } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-auth.js";
   import {
     getFirestore,
     collection,
@@ -239,18 +185,20 @@
     serverTimestamp,
     getDocs,
     deleteDoc,
-    doc,
-  } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
+    doc
+  } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js";
 
+  // ==== Firebase Config ====
   const firebaseConfig = {
     apiKey: "AIzaSyCHq0bxvBR4cHF4ImhDunepHj9GHlaDA_E",
     authDomain: "chating-e0e5a.firebaseapp.com",
     projectId: "chating-e0e5a",
-    storageBucket: "chating-e0e5a.appspot.com",
+    storageBucket: "chating-e0e5a.firebasestorage.app",
     messagingSenderId: "638067889380",
     appId: "1:638067889380:web:97ac7ed4617e0f775208f1"
   };
 
+  // Initialize Firebase
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
   const db = getFirestore(app);
@@ -263,6 +211,7 @@
   let currentUserUid = null;
   let unsubscribe = null;
 
+  // === Anonymous Login ===
   signInAnonymously(auth).catch(error => {
     alert("प्रमाणीकरण त्रुटि: " + error.message);
   });
@@ -324,7 +273,7 @@
   }
 </script>
 
-<!-- Dark mode toggle script -->
+<!-- DARK MODE -->
 <script>
   const toggleBtn = document.getElementById('toggleMode');
   toggleBtn.addEventListener('click', () => {
@@ -334,4 +283,4 @@
 </script>
 
 </body>
-  </html>
+</html>
