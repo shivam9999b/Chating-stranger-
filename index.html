@@ -5,12 +5,9 @@
   <meta charset="UTF-8">
   <title>Online Chating – Login</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <!-- Google Font -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 
   <style>
-    /* ==== RESET & BASICS ==== */
     *{box-sizing:border-box;margin:0;padding:0}
     body,html{height:100%}
     body{
@@ -19,92 +16,44 @@
       display:flex;
       align-items:center;
       justify-content:center;
-      overflow:hidden;      /* वीडियो स्क्रॉल न हो */
+      overflow:hidden;
     }
-
-    /* ==== FULL-SCREEN BACKGROUND VIDEO ==== */
     video.bg-video{
-      position:fixed;
-      top:0;left:0;
-      width:100%;
-      height:100%;
-      object-fit:cover;
-      z-index:-2;           /* सबसे पीछे */
+      position:fixed;top:0;left:0;width:100%;height:100%;
+      object-fit:cover;z-index:-2;
     }
-    /* हल्का डार्क ओवरले ताकि कंटेंट पढ़ा जा सके */
     .overlay{
-      position:fixed;
-      top:0;left:0;
-      width:100%;
-      height:100%;
-      background:rgba(0,0,0,.45);
-      z-index:-1;
+      position:fixed;top:0;left:0;width:100%;height:100%;
+      background:rgba(0,0,0,.45);z-index:-1;
     }
-
-    /* ==== LOGIN CARD ==== */
     .card{
-      width:90%;
-      max-width:380px;
-      padding:32px 28px 40px;
+      width:90%;max-width:380px;padding:32px 28px 40px;
       background:rgba(255,255,255,.12);
       backdrop-filter:blur(14px);
-      border-radius:18px;
-      text-align:center;
+      border-radius:18px;text-align:center;
       box-shadow:0 8px 24px rgba(0,0,0,.3);
     }
-    header{
-      font-size:30px;
-      font-weight:600;
-      margin-bottom:26px;
-      text-transform:capitalize;
-    }
-
+    header{font-size:30px;font-weight:600;margin-bottom:26px;text-transform:capitalize}
     select,button{
-      width:100%;
-      padding:13px 14px;
-      font-size:15px;
-      border:none;
-      border-radius:10px;
-      margin-bottom:14px;
-      outline:none;
+      width:100%;padding:13px 14px;font-size:15px;
+      border:none;border-radius:10px;margin-bottom:14px;outline:none;
     }
-    select{
-      background:rgba(255,255,255,.85);
-      color:#333;
-    }
-
+    select{background:rgba(255,255,255,.85);color:#333}
     .google-btn{
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      gap:8px;
-      background:#fff;
-      color:#4285F4;
-      font-weight:600;
-      transition:.25s;
-      cursor:pointer;
+      display:flex;align-items:center;justify-content:center;gap:8px;
+      background:#fff;color:#4285F4;font-weight:600;transition:.25s;cursor:pointer;
     }
     .google-btn:hover{background:#f0f0f0}
-
     #error-message{color:#ffbebc;font-size:14px;margin-top:4px;min-height:18px}
-
-    /* ==== FOOTER (AGE & TERMS) ==== */
-    footer{
-      margin-top:20px;
-      font-size:13px;
-      color:#eee;
-    }
-    footer label{
-      display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:6px
-    }
+    footer{margin-top:20px;font-size:13px;color:#eee}
+    footer label{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:6px}
     footer a{color:#a6ffd1;text-decoration:underline}
-
-    /* Custom switch */
     input[type="checkbox"]{
       appearance:none;width:40px;height:22px;background:#ccc;border-radius:15px;position:relative;cursor:pointer
     }
     input[type="checkbox"]::before{
-      content:"";position:absolute;width:18px;height:18px;border-radius:50%;background:#fff;top:2px;left:2px;transition:.3s
+      content:"";position:absolute;width:18px;height:18px;border-radius:50%;
+      background:#fff;top:2px;left:2px;transition:.3s
     }
     input[type="checkbox"]:checked{background:#4caf50}
     input[type="checkbox"]:checked::before{transform:translateX(18px)}
@@ -112,36 +61,29 @@
 </head>
 <body>
 
-  <!-- Background video (🔁, 🔇, 📱hide on small data if needed) -->
-  <video class="bg-video" src="Web.mp4"
-         autoplay muted loop playsinline></video>
+  <video class="bg-video" src="Web.mp4" autoplay muted loop playsinline></video>
   <div class="overlay"></div>
 
-  <!-- === LOGIN CARD ==== -->
   <div class="card">
     <header>Welcome</header>
 
-    <!-- Country -->
     <select id="countrySelect">
       <option value="" disabled selected>Select Country</option>
     </select>
 
-    <!-- Gender -->
     <select id="genderSelect">
       <option value="" disabled selected>Select Gender</option>
       <option value="male">♂️ Male</option>
       <option value="female">♀️ Female</option>
     </select>
 
-    <!-- Google Login -->
-    <button class="google-btn" onclick="loginWithGoogle()">
+    <button class="google-btn" id="googleLoginBtn">
       <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="" width="18">
       Login with Google
     </button>
 
     <div id="error-message"></div>
 
-    <!-- Footer -->
     <footer>
       <label>
         <input type="checkbox" id="ageCheck">
@@ -151,24 +93,28 @@
     </footer>
   </div>
 
-  <!-- Firebase -->
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+  <!-- Firebase SDK (Modular Version) -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
+    import { getAuth, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-auth.js";
 
-  <script>
-    /* ==== Firebase Config ==== */
+    // ==== Firebase Config ====
     const firebaseConfig = {
-      apiKey: "AIzaSyD9IUXYLnLJLpborYhtzj86EGoZgJ5JOwk",
-      authDomain: "country-login-73d8a.firebaseapp.com",
-      projectId: "country-login-73d8a",
-      storageBucket: "country-login-73d8a.appspot.com",
-      messagingSenderId: "199478752615",
-      appId: "1:199478752615:web:bbecfed8887a0493372bc2"
+      apiKey: "AIzaSyDSkJSGENrygwybOBv-sDqH8PTK5sFdjcU",
+      authDomain: "online-chating-909f6.firebaseapp.com",
+      databaseURL: "https://online-chating-909f6-default-rtdb.firebaseio.com",
+      projectId: "online-chating-909f6",
+      storageBucket: "online-chating-909f6.firebasestorage.app",
+      messagingSenderId: "492094035611",
+      appId: "1:492094035611:web:d657ec0e94e1e5b885d83e"
     };
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
 
-    /* ==== Country List ==== */
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const provider = new GoogleAuthProvider();
+
+    // ==== Country List ====
     const countries = [
       "India","United States","United Kingdom","Australia","Canada","Germany","France","Japan","China","Brazil","Mexico",
       "South Africa","Russia","Italy","Spain","Indonesia","Netherlands","Sweden","Switzerland","Turkey","Nepal","Bangladesh",
@@ -176,13 +122,15 @@
     ];
     const countrySelect = document.getElementById('countrySelect');
     countries.forEach(c=>{
-      const o=document.createElement('option');o.value=o.textContent=c;countrySelect.appendChild(o);
+      const o=document.createElement('option');
+      o.value=o.textContent=c;
+      countrySelect.appendChild(o);
     });
 
     const errorMsg = document.getElementById('error-message');
 
-    /* ==== Google Auth ==== */
-    function loginWithGoogle(){
+    // ==== Login Function ====
+    document.getElementById("googleLoginBtn").addEventListener("click", async ()=>{
       const country = countrySelect.value;
       const gender  = document.getElementById('genderSelect').value;
       const is18    = document.getElementById('ageCheck').checked;
@@ -192,23 +140,24 @@
       if(!is18){errorMsg.textContent="You must confirm you are 18+.";return}
       errorMsg.textContent="";
 
-      const provider = new firebase.auth.GoogleAuthProvider();
-      auth.signInWithPopup(provider).then(res=>{
-        const user=res.user;
-        // Save to sessionStorage
-        sessionStorage.setItem('userName',user.displayName);
-        sessionStorage.setItem('userEmail',user.email);
-        sessionStorage.setItem('userUID',user.uid);
-        sessionStorage.setItem('userCountry',country);
-        sessionStorage.setItem('userGender',gender);
+      try{
+        const result = await signInWithPopup(auth, provider);
+        const user = result.user;
 
-        alert("Login Successful! Welcome "+user.displayName);
-        window.location.href="chating.html";
-      }).catch(err=>{
+        sessionStorage.setItem('userName', user.displayName);
+        sessionStorage.setItem('userEmail', user.email);
+        sessionStorage.setItem('userUID', user.uid);
+        sessionStorage.setItem('userCountry', country);
+        sessionStorage.setItem('userGender', gender);
+
+        alert("Login Successful! Welcome " + user.displayName);
+        window.location.href = "chating.html";
+      }catch(err){
         console.error(err);
         errorMsg.textContent="Google Login failed. Try again.";
-      });
-    }
+      }
+    });
   </script>
 </body>
-</html>
+  </html>
+  
